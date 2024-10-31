@@ -53,6 +53,13 @@ Resources:
     Properties:
       TopicName: cloudx-sam-py-sns
 
+  EmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      Endpoint: taras.tarasiuk.dev@gmail.com
+      TopicArn: !Ref SNSTopic
+
   MySqsQueue:
     Type: AWS::SQS::Queue
     Properties:
