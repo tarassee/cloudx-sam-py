@@ -1,5 +1,6 @@
 import json
 import os
+import boto3
 
 # import requests
 sns_client = boto3.client('sns')
@@ -19,7 +20,7 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "hello world 5",
+            "message": "hello world 6",
             "invocation_source": result
             # "location": ip.text.replace("\n", "")
         }),
@@ -42,8 +43,8 @@ def process_queue_invocation(event):
 
 
 def send_to_sns(sns_message):
-    # sns_topic_arn = os.getenv('AWS_SNS_TOPIC_ARN', 'default-topic-arn-if-none-specified') todo: move to env in template
-    sns_topic_arn = 'arn:aws:sns:us-east-1:224537879472:cloudx-demo-sns'
+    sns_topic_arn = os.getenv('AWS_SNS_TOPIC_ARN', 'default-topic-arn-if-none-specified')
+
     sns_client.publish(
         TopicArn=sns_topic_arn,
         Message=sns_message,

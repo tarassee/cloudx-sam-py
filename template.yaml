@@ -22,16 +22,41 @@ Resources:
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
-      - x86_64
+        - x86_64
+      Environment:
+        Variables:
+          AWS_SNS_TOPIC_ARN: !Ref SNSTopic
       Events:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /hello
             Method: get
+        QueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MySqsQueue.Arn
+            BatchSize: 1
+      Policies:
+        - SQSPollerPolicy:
+            # todo: recheck, for some reason arn is duplicated, possibly sam issue
+            QueueName: !GetAtt MySqsQueue.QueueName
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref SNSTopic
+
       AutoPublishAlias: live
       DeploymentPreference:
-        Type: Canary10Percent5Minutes
+        Type: AllAtOnce
+
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: cloudx-sam-py-sns
+
+  MySqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: cloudx-sam-py-sqs
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
