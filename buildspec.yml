@@ -6,13 +6,13 @@ phases:
       - echo "Installing required software"
       - pip install -r hello_world/requirements.txt
       - pip install aws-sam-cli
-  pre_build:
-    commands:
-      - echo "Running tests"
-  #      - pytest tests/
+      - echo "Installing pytest"
+      - python -m pip install pytest
 
   build:
     commands:
+      - echo "Running unit tests"
+      - python -m pytest tests/unit/test_math_functions.py
       - echo "Building the application"
       - sam build
       - sam package --output-template-file packaged.yaml --resolve-s3 --template-file template.yaml
