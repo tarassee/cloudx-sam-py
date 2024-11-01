@@ -15,7 +15,7 @@ phases:
     commands:
       - echo "Building the application"
       - sam build
-      - sam package --output-template-file packaged.yaml --s3-bucket $S3_BUCKET # S3_BUCKET is specified in CodeBuild in AWS
+      - sam package --output-template-file packaged.yaml --resolve-s3 --template-file template.yaml
 
 artifacts:
   files:
